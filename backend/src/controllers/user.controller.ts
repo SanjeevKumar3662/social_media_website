@@ -1,51 +1,42 @@
-// export const loginUser = async (req, res) => {};
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import { RequestHandler, Response } from "express";
+import { RequestHandler } from "express";
 
+import { generateToken } from "../utils/utils.js";
 import { User } from "../models/user.model.js";
+import { registerSchema } from "../vaidations/user.validation.js";
 
 export const registerUser: RequestHandler = async (req, res) => {
-  try {
-    const { fullname, username, email, password } = req.body;
+  const parsed = registerSchema.safeParse(req.body);
 
-    if (!fullname || !username || !email || !password) {
-      return res.status(400).json({ message: "All field are required" });
-    }
+  if (!parsed.success) {
+    return res.status(400).json({ message: "Validation Failed" });
+  }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const { fullname, username, email, password } = parsed.data;
 
-    const user = await User.create({
-      fullname,
-      username,
-      email,
-      password: hashedPassword,
-    });
+  const isDupUser = await User.findOne({ $or: [{ username }, { email }] });
 
-    if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Failed To Create a User : Invalid Data" });
-    }
+  if (isDupUser) {
+    return res.status(400).json({ message: "Duplicate User" });
+  }
 
-    generateToken({ _id: user._id.toString() }, res);
-    return res.status(201).json({ user });
-  } catch (error) {}
-};
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-interface TokenPayload {
-  _id: string;
-}
-
-export const generateToken = (payload: TokenPayload, res: Response) => {
-  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
-    expiresIn: "7d",
+  const user = await User.create({
+    fullname,
+    username,
+    email,
+    password: hashedPassword,
   });
 
-  res.cookie("jwt", token, {
-    httpOnly: true,
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-    sameSite: process.env.MODE !== "DEV" ? "none" : "lax",
-    secure: process.env.MODE !== "DEV",
-  });
+  if (!user) {
+    return res
+      .status(400)
+      .json({ message: "Failed To Create a User : Invalid Data" });
+  }
+
+  generateToken({ _id: user._id.toString() }, res);
+  return res.status(201).json({ user });
 };
+
+export const loginUser: RequestHandler = async (req, res) => {};
