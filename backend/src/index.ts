@@ -5,6 +5,7 @@ import cors from "cors";
 
 import { connectDB } from "./db/db.js";
 import userRouter from "../src/routes/user.route.js";
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 
 const PORT = 3000;
 
@@ -16,6 +17,8 @@ app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/v1/user", userRouter);
+
+app.use(errorMiddleware());
 
 await connectDB();
 
