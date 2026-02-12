@@ -1,6 +1,7 @@
 // export const loginUser = async (req, res) => {};
 import bcrypt from "bcryptjs";
-import { RequestHandler } from "express";
+import jwt from "jsonwebtoken";
+import { RequestHandler, Response } from "express";
 
 import { User } from "../models/user.model.js";
 
@@ -27,6 +28,24 @@ export const registerUser: RequestHandler = async (req, res) => {
         .json({ message: "Failed To Create a User : Invalid Data" });
     }
 
-    return;
+    generateToken({ _id: user._id.toString() }, res);
+    return res.status(201).json({ user });
   } catch (error) {}
+};
+
+interface TokenPayload {
+  _id: string;
+}
+
+export const generateToken = (payload: TokenPayload, res: Response) => {
+  const token = jwt.sign(payload, process.env.JWT_SECRET as string, {
+    expiresIn: "7d",
+  });
+
+  res.cookie("jwt", token, {
+    httpOnly: true,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+    sameSite: process.env.MODE !== "DEV" ? "none" : "lax",
+    secure: process.env.MODE !== "DEV",
+  });
 };
