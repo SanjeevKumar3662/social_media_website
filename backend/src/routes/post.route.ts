@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { createPost } from "../controllers/post.controller.js";
+import { createPost, deletePost } from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { authMiddleware } from "../middlewares/auth.js";
 
@@ -13,7 +13,9 @@ router.post(
     { name: "image", maxCount: 1 },
     { name: "video", maxCount: 1 },
   ]),
-  asyncHandler(createPost),
+  createPost,
 );
+
+router.delete("/", authMiddleware, deletePost);
 
 export default router;
