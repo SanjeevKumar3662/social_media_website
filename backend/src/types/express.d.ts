@@ -1,11 +1,10 @@
-import { JwtPayload } from "jsonwebtoken";
+import { HydratedDocument } from "mongoose";
+import { IUser } from "../models/user.model.ts";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: JwtPayload; // or your custom payload type
+      user?: HydratedDocument<IUser>;
     }
   }
 }
-
-export {};
