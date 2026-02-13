@@ -6,7 +6,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 
 export const createPost: RequestHandler = asyncHandler(async (req, res) => {
   const user = req?.user;
-  console.log(user);
+  // console.log(user);
 
   if (!user) {
     return res.status(401).json({ message: "Unauthorized" });
