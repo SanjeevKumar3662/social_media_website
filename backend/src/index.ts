@@ -8,7 +8,7 @@ import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import userRouter from "./routes/user.route.js";
 import postRouter from "./routes/post.route.js";
 
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const app = express();
 
