@@ -1,6 +1,7 @@
 import { Router } from "express";
-import { asyncHandler } from "../utils/asyncHandler.js";
+
 import {
+  authMe,
   loginUser,
   logoutUser,
   registerUser,
@@ -9,8 +10,9 @@ import { authMiddleware } from "../middlewares/auth.js";
 
 const router = Router();
 
-router.post("/register", asyncHandler(registerUser));
-router.post("/login", asyncHandler(loginUser));
-router.post("/logout", authMiddleware, asyncHandler(logoutUser));
+router.post("/register", registerUser);
+router.post("/login", loginUser);
+router.post("/logout", authMiddleware, logoutUser);
+router.get("/me", authMe);
 
 export default router;

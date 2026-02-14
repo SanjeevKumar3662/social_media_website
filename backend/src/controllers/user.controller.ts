@@ -4,8 +4,9 @@ import { RequestHandler } from "express";
 import { generateToken } from "../utils/utils.js";
 import { User } from "../models/user.model.js";
 import { loginSchema, registerSchema } from "../vaidations/user.validation.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
-export const registerUser: RequestHandler = async (req, res) => {
+export const registerUser: RequestHandler = asyncHandler(async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
 
   if (!parsed.success) {
@@ -37,9 +38,9 @@ export const registerUser: RequestHandler = async (req, res) => {
 
   generateToken({ _id: user._id.toString() }, res);
   return res.status(201).json({ user });
-};
+});
 
-export const loginUser: RequestHandler = async (req, res) => {
+export const loginUser: RequestHandler = asyncHandler(async (req, res) => {
   const parsed = loginSchema.safeParse(req.body);
 
   if (!parsed.success) {
@@ -63,9 +64,9 @@ export const loginUser: RequestHandler = async (req, res) => {
   generateToken({ _id: user._id.toString() }, res);
 
   return res.status(200).json(user);
-};
+});
 
-export const logoutUser: RequestHandler = async (req, res) => {
+export const logoutUser: RequestHandler = asyncHandler(async (req, res) => {
   return res
     .status(200)
     .cookie("jwt", "", {
@@ -75,4 +76,8 @@ export const logoutUser: RequestHandler = async (req, res) => {
       secure: process.env.MODE !== "DEV",
     })
     .json({ message: "Logged out Successfully" });
-};
+});
+
+export const authMe = asyncHandler(async (req, res) => {
+  return res.status(200).json(req.user);
+});
