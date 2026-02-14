@@ -93,3 +93,47 @@ export const deletePost: RequestHandler = asyncHandler(async (req, res) => {
 
   return res.status(200).json(deletedPost);
 });
+
+export const getPost = asyncHandler(async (req, res) => {
+  const postId = req.params.postId;
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+
+  if (!post.isPublic) {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    if (post.userId.toString() !== req.user?._id.toString()) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+  }
+
+  return res.status(200).json(post);
+});
+
+export const getAllPosts = asyncHandler(async (req, res) => {
+  const limit = Number(req.query.limit) || 10; // get the limit
+  const cursor = (req.query.cursor as string) || undefined; // cursor from req
+
+  let query: any = { isPublic: true };
+
+  if (cursor) {
+    // if cursor exists then add this to query
+    query.createdAt = { $lt: new Date(cursor) };
+  }
+
+  // then find it sort it by newest with the limit
+  // 1 -> ascending
+  // -1 -> descending
+
+  const posts = await Post.find(query).sort({ createdAt: -1 }).limit(limit);
+
+  return res.status(200).json({
+    posts,
+    cursor: posts.length > 0 ? posts[posts.length - 1].createdAt : null,
+  });
+});
