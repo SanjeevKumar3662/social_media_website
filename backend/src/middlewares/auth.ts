@@ -19,7 +19,7 @@ export const authMiddleware: RequestHandler = async (req, res, next) => {
       process.env.JWT_SECRET as string,
     ) as JwtPayload;
 
-    const user = await User.findById(decodedToken._id);
+    const user = await User.findById(decodedToken._id).select("-password");
 
     if (!user) {
       return res.status(401).json({ message: "User does not exists" });
