@@ -37,7 +37,11 @@ export const registerUser: RequestHandler = asyncHandler(async (req, res) => {
   }
 
   generateToken({ _id: user._id.toString() }, res);
-  return res.status(201).json({ user });
+  return res.status(201).json({
+    fullname: user.fullname,
+    username: user.username,
+    email: user.email,
+  });
 });
 
 export const loginUser: RequestHandler = asyncHandler(async (req, res) => {
@@ -49,7 +53,7 @@ export const loginUser: RequestHandler = asyncHandler(async (req, res) => {
 
   const { username, password } = parsed.data;
 
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username }).select("-password");
 
   if (!user) {
     return res.status(400).json({ message: "Invalid Credientials" });
