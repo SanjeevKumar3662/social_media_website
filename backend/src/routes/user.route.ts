@@ -13,6 +13,6 @@ const router = Router();
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", authMiddleware, logoutUser);
-router.get("/me", authMe);
+router.get("/me", authMiddleware, authMe);
 
 export default router;
