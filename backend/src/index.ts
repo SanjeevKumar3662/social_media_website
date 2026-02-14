@@ -25,6 +25,15 @@ app.use(
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/posts", postRouter);
 
+// health check
+app.get("/api/v1/health", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.use(errorMiddleware());
 
 await connectDB();
