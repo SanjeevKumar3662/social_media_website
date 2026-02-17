@@ -51,7 +51,7 @@ export const useAuthStore = create<AuthState>((set) => ({
   logoutUser: async () => {
     try {
       const res = await axiosInstance.post("/user/logout");
-      set({ authUser: res.data });
+      set({ authUser: null });
       toast.success("User login");
       console.log("userdata form login user :", res.data);
     } catch (error) {
