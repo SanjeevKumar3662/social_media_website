@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { HomePage } from "./pages/HomePage";
 import { Login } from "./pages/auth-froms/Login";
 import { Register } from "./pages/auth-froms/Register";
+import { Nav } from "./components/Nav";
 
 function App() {
   const { authUser, checkUser } = useAuthStore();
@@ -15,8 +16,9 @@ function App() {
 
   // console.log("authuser", authUser);
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       {/* <div>hello</div> */}
+      <Nav></Nav>
       <Routes>
         <Route
           path="/"
@@ -31,7 +33,7 @@ function App() {
           element={!authUser ? <Register /> : <Navigate to="/" />}
         />
       </Routes>
-    </>
+    </div>
   );
 }
 
