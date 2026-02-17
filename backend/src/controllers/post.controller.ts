@@ -130,10 +130,16 @@ export const getAllPosts = asyncHandler(async (req, res) => {
   // 1 -> ascending
   // -1 -> descending
 
-  const posts = await Post.find(query).sort({ createdAt: -1 }).limit(limit);
-
+  const posts = await Post.find(query)
+    .populate("userId", "username fullname")
+    .sort({ createdAt: -1 })
+    .limit(limit);
   return res.status(200).json({
-    posts,
+    posts: posts.map((post) => ({
+      ...post.toObject(),
+      user: post.userId,
+      userId: undefined,
+    })),
     cursor: posts.length > 0 ? posts[posts.length - 1].createdAt : null,
   });
 });
