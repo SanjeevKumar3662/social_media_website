@@ -1,10 +1,18 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuthStore } from "../../store/authStore";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [hidePassword, setHidePassword] = useState(true);
+
+  const { loginUser } = useAuthStore();
+
+  const handleOnSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await loginUser({ username, password });
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-linear-to-br from-[#1A3263] to-[#0f1f3d] px-4">
@@ -16,7 +24,7 @@ export const Login = () => {
           Sign in to continue
         </p>
 
-        <form className="space-y-5">
+        <form className="space-y-5" onSubmit={handleOnSubmit}>
           {/* Username */}
           <div className="flex flex-col gap-1">
             <label htmlFor="username" className="text-sm text-gray-300">
