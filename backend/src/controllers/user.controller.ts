@@ -6,6 +6,8 @@ import { User } from "../models/user.model.js";
 import { loginSchema, registerSchema } from "../vaidations/user.validation.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Post } from "../models/post.model.js";
+import cloudinary from "../utils/cloudinary.js";
+import { file } from "zod";
 
 export const registerUser: RequestHandler = asyncHandler(async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
@@ -54,7 +56,7 @@ export const loginUser: RequestHandler = asyncHandler(async (req, res) => {
 
   const { username, password } = parsed.data;
 
-  const user = await User.findOne({ username });
+  const user = await User.findOne({ username }).select("password");
 
   if (!user) {
     return res.status(400).json({ message: "Invalid Credientials" });
@@ -103,7 +105,9 @@ export const getUserProifle = asyncHandler(async (req, res) => {
   }
 
   // later add bio profilePic and background
-  const user = await User.findOne({ username }).select("username");
+  const user = await User.findOne({ username }).select(
+    "username fullname bio profilePic coverPic",
+  );
 
   if (!user) {
     return res.status(404).json({ message: "User does not exist" });
@@ -136,4 +140,74 @@ export const getUserProifle = asyncHandler(async (req, res) => {
     }),
     cursor: posts.length > 0 ? posts[posts.length - 1].createdAt : null,
   });
+});
+
+export const updateUserProfile = asyncHandler(async (req, res) => {
+  const { fullname, bio } = req.body;
+
+  // const user = await User.findById(req.user?._id);
+
+  // get files from multer middleware
+  const files = req.files as {
+    profilePic?: Express.Multer.File[];
+    coverPic?: Express.Multer.File[];
+  };
+
+  // upload files to cloudinary
+  let profilePic;
+  let coverPic;
+
+  if (files?.profilePic) {
+    const uploadRes = await cloudinary.uploader.upload(
+      files.profilePic?.[0].path,
+    );
+
+    if (!uploadRes) {
+      return res
+        .status(500)
+        .json({ message: "Faild to upload the profilePic" });
+    }
+
+    profilePic = {
+      url: uploadRes?.secure_url,
+      public_id: uploadRes?.public_id,
+    };
+
+    console.log("profilePic", profilePic);
+  }
+
+  if (files?.coverPic) {
+    const uploadRes = await cloudinary.uploader.upload(
+      files?.coverPic?.[0].path,
+    );
+
+    if (!uploadRes) {
+      return res.status(500).json({ message: "Failed to upload coverPic" });
+    }
+
+    coverPic = {
+      url: uploadRes.secure_url,
+      public_id: uploadRes.public_id,
+    };
+  }
+
+  const updateData: any = {
+    fullname,
+    bio,
+  };
+
+  if (profilePic) updateData.profilePic = profilePic;
+  if (coverPic) updateData.coverPic = coverPic;
+
+  const user = await User.findByIdAndUpdate(req.user?._id, updateData, {
+    returnDocument: "after",
+  });
+
+  if (!user) {
+    return res.status(401).json({ message: "Failed to update the user" });
+  }
+
+  console.log(user);
+
+  return res.status(200).json(user);
 });
