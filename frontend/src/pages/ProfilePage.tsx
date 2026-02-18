@@ -62,6 +62,8 @@ export const ProfilePage = () => {
     setShowPostModal((prev) => !prev);
   };
 
+  console.log("userProfile", userProfile);
+
   return (
     <div className="min-h-screen bg-blue-900">
       <Nav togglePostModal={togglePostModal} />
@@ -75,7 +77,7 @@ export const ProfilePage = () => {
           <div
             style={{
               backgroundImage: `url(${
-                userProfile?.coverPic ||
+                userProfile?.coverPic?.url ||
                 "https://wallpapercave.com/wp/wp11351574.jpg"
               })`,
             }}
@@ -87,8 +89,8 @@ export const ProfilePage = () => {
             {/* Profile Picture */}
             <img
               src={
-                userProfile?.profilePic ||
-                "https://img.freepik.com/premium-vector/person-icon_109161-4674.jpg"
+                userProfile?.profilePic?.url ||
+                "https://img.freepik.com/free-vector/user-circles-set_78370-4704.jpg"
               }
               alt="profile"
               className="w-32 h-32 md:w-36 md:h-36 rounded-full border-4 border-[#1f3c6d] absolute -top-16"

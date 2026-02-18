@@ -12,8 +12,8 @@ type PostStore = {
     username: string;
     fullname: string;
     bio: string;
-    profilePic: string;
-    coverPic: string;
+    profilePic: { url: string; public_id: string };
+    coverPic: { url: string; public_id: string };
   } | null;
   profilePosts: PostType[];
   profileCursor: string | null;
