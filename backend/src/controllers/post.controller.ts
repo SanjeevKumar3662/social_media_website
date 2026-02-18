@@ -60,13 +60,11 @@ export const createPost: RequestHandler = asyncHandler(async (req, res) => {
 
   const populatedPost = await post.populate("userId", "username fullname");
 
-  return res
-    .status(201)
-    .json({
-      ...populatedPost.toObject(),
-      user: populatedPost.userId,
-      userId: undefined,
-    });
+  return res.status(201).json({
+    ...populatedPost.toObject(),
+    user: populatedPost.userId,
+    userId: undefined,
+  });
 });
 
 export const deletePost: RequestHandler = asyncHandler(async (req, res) => {
