@@ -103,7 +103,7 @@ export const ProfilePage = () => {
               </div>
             ) : (
               <div className="flex justify-end mt-4">
-                <button className="border border-gray-400 hover:bg-white/10 transition px-5 py-2 rounded-full text-sm font-medium">
+                <button className=" bg-gray-300 text-black hover:bg-gray-100 transition px-5 py-2 rounded-full text-md font-medium cursor-pointer">
                   Follow
                 </button>
               </div>

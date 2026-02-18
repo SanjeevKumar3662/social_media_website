@@ -4,6 +4,8 @@ import { userPostStore } from "../store/postStore";
 import { PostModal } from "../components/PostModal";
 import { Toaster } from "react-hot-toast";
 import { Nav } from "../components/Nav";
+import { PostComposer } from "../components/PostComposer";
+// import { SearchIcon } from "lucide-react";
 
 export const HomePage = () => {
   const { posts, cursor, getAllPost } = userPostStore();
@@ -55,8 +57,7 @@ export const HomePage = () => {
       <div className="md:ml-64 p-6 flex flex-col items-center gap-4">
         <Toaster position="top-right" />
 
-        {/* Create Post Button */}
-        {/* <div className="max-w-xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 p-5"></div> */}
+        <PostComposer />
 
         {showPostModal && <PostModal onClose={togglePostModal} />}
 
