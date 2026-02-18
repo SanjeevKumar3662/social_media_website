@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
   authMe,
+  getUserProifle,
   loginUser,
   logoutUser,
   registerUser,
@@ -14,5 +15,6 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", authMiddleware, logoutUser);
 router.get("/me", authMiddleware, authMe);
+router.get("/:username", authMiddleware, getUserProifle);
 
 export default router;

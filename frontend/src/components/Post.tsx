@@ -5,6 +5,8 @@ import { ArrowLeft, MoveRight, Share, ThumbsDown } from "lucide-react";
 import { ThumbsUp } from "lucide-react";
 import { MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router";
+import { formatDistanceToNow } from "date-fns";
 
 type PostProps = {
   post: PostType;
@@ -55,17 +57,23 @@ export const Post = ({ post }: PostProps) => {
   return (
     <div className="max-w-xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 p-5 flex flex-col gap-4  ">
       {/* Header */}
-      <div>Index : {}</div>
+      {/* <div>Index : {}</div> */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-sm font-semibold">
             U
           </div>
           <div className="flex flex-col">
-            <button className="text-sm font-semibold hover:underline">
-              {post.user.username}
-            </button>
-            <span className="text-xs text-gray-400">2 hours ago</span>
+            <Link to={`/${post.user.username}`}>
+              <button className="text-sm font-semibold hover:underline">
+                {post.user.username}
+              </button>
+            </Link>
+            <span className="text-xs text-gray-400">
+              {formatDistanceToNow(new Date(post.createdAt), {
+                addSuffix: true,
+              })}
+            </span>
           </div>
         </div>
       </div>
@@ -104,14 +112,14 @@ export const Post = ({ post }: PostProps) => {
                 <img
                   src={media[current].url}
                   alt="Post media"
-                  className="w-full object-cover max-h-125"
+                  className="w-full object-cover max-h-[60vh]"
                 />
               ) : (
                 <video
                   src={media[current].url}
                   controls
                   preload="metadata"
-                  className="w-full max-h-125"
+                  className="w-full max-h-[60vh]"
                 />
               )}
             </motion.div>

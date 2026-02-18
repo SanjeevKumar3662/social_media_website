@@ -5,6 +5,7 @@ import { generateToken } from "../utils/utils.js";
 import { User } from "../models/user.model.js";
 import { loginSchema, registerSchema } from "../vaidations/user.validation.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { Post } from "../models/post.model.js";
 
 export const registerUser: RequestHandler = asyncHandler(async (req, res) => {
   const parsed = registerSchema.safeParse(req.body);
@@ -89,4 +90,50 @@ export const logoutUser: RequestHandler = asyncHandler(async (req, res) => {
 
 export const authMe = asyncHandler(async (req, res) => {
   return res.status(200).json(req.user);
+});
+
+export const getUserProifle = asyncHandler(async (req, res) => {
+  const { username } = req.params;
+
+  const limit = Number(req.query.limit) || 10; // get the limit
+  const cursor = (req.query.cursor as string) || undefined; // cursor from req
+
+  if (!username) {
+    return res.status(400).json({ message: "User's username is required" });
+  }
+
+  // later add bio profilePic and background
+  const user = await User.findOne({ username }).select("username");
+
+  if (!user) {
+    return res.status(404).json({ message: "User does not exist" });
+  }
+
+  let query: any = { userId: user?._id, isPublic: true };
+
+  if (cursor) {
+    // if cursor exists then add this to query
+    query.createdAt = { $lt: new Date(cursor) };
+  }
+
+  // then find it sort it by newest with the limit
+  // 1 -> ascending
+  // -1 -> descending
+
+  const posts = await Post.find(query)
+    .populate("userId", "username fullname")
+    .sort({ createdAt: -1 })
+    .limit(limit);
+
+  return res.status(200).json({
+    user,
+    posts: posts.map((post) => {
+      return {
+        ...post.toObject(),
+        user: post.userId,
+        userId: undefined,
+      };
+    }),
+    cursor: posts.length > 0 ? posts[posts.length - 1].createdAt : null,
+  });
 });
