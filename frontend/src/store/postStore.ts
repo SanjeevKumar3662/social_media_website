@@ -6,13 +6,25 @@ import toast from "react-hot-toast";
 type PostStore = {
   posts: PostType[];
   cursor: string | null;
+
+  userProfile: {
+    username: string;
+  } | null;
+  profilePosts: PostType[];
+  profileCursor: string | null;
+
   getAllPost: (cursor?: string | null) => Promise<void>;
+  getUserProfile: (username: string, cursor?: string | null) => Promise<void>;
   createPost: (formData: FormData) => Promise<void>;
 };
 
 export const userPostStore = create<PostStore>((set) => ({
   posts: [],
   cursor: null,
+
+  userProfile: null,
+  profilePosts: [],
+  profileCursor: null,
 
   getAllPost: async (cursor) => {
     try {
@@ -36,6 +48,30 @@ export const userPostStore = create<PostStore>((set) => ({
       console.log("Error from fetchPost", error);
     }
   },
+  getUserProfile: async (username, cursor) => {
+    console.log("getUserProfile args", username, cursor);
+    try {
+      const res = await axiosInstance.get(`/user/${username}`, {
+        params: {
+          limit: 10,
+          cursor: cursor ?? undefined,
+        },
+        withCredentials: true,
+      });
+
+      set((state) => ({
+        profilePosts: cursor
+          ? [...state.profilePosts, ...res.data.posts] // append
+          : res.data.posts, // first load
+        profileCursor: res.data.cursor,
+        userProfile: res.data.user,
+      }));
+
+      console.log("Fetched ProfilePosts:", res.data);
+    } catch (error) {
+      console.log("Error from getUserPost", error);
+    }
+  },
 
   createPost: async (formData) => {
     try {
@@ -45,6 +81,7 @@ export const userPostStore = create<PostStore>((set) => ({
         },
         withCredentials: true,
       });
+      console.log("post created", res.data);
 
       // Optional: prepend new post to feed
       set((state) => ({
