@@ -55,7 +55,7 @@ export const Post = ({ post }: PostProps) => {
   }
 
   return (
-    <div className="max-w-xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 p-5 flex flex-col gap-4  ">
+    <div className="max-w-2xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 p-5 flex flex-col gap-4  ">
       {/* Header */}
       {/* <div>Index : {}</div> */}
       <div className="flex items-center justify-between">

@@ -8,7 +8,12 @@ type PostStore = {
   cursor: string | null;
 
   userProfile: {
+    _id: string;
     username: string;
+    fullname: string;
+    bio: string;
+    profilePic: string;
+    coverPic: string;
   } | null;
   profilePosts: PostType[];
   profileCursor: string | null;
