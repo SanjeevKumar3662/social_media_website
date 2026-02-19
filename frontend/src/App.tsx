@@ -33,7 +33,7 @@ function App() {
           path="/register"
           element={!authUser ? <Register /> : <Navigate to="/" />}
         />
-        <Route path="/:username" element={<ProfilePage />} />
+        <Route path="/profile/:username" element={<ProfilePage />} />
       </Routes>
     </div>
   );

@@ -66,7 +66,7 @@ export const Nav = () => {
             </a>
 
             <Link
-              to={`/${authUser?.username}`}
+              to={`/profile/${authUser?.username}`}
               onClick={() => setIsOpen(false)}
               className="px-4 py-2 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition"
             >

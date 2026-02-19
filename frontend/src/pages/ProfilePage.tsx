@@ -136,10 +136,10 @@ export const ProfilePage = () => {
               <p className="text-gray-400 text-sm">@{userProfile?.username}</p>
 
               {/* Bio */}
-              <p className="mt-3 text-gray-200 max-w-2xl">
+              <pre className="mt-3 text-gray-200 max-w-2xl whitespace-pre-wrap wrap-break-word text-sm font-mono leading-tight tracking-tight">
                 {userProfile?.bio ||
                   "This is the bio section. Add something cool here."}
-              </p>
+              </pre>
             </div>
           </div>
         </div>

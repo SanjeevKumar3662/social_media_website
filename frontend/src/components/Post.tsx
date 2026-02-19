@@ -64,7 +64,7 @@ export const Post = ({ post }: PostProps) => {
             U
           </div>
           <div className="flex flex-col">
-            <Link to={`/${post.user.username}`}>
+            <Link to={`/profile/${post.user.username}`}>
               <button className="text-sm font-semibold hover:underline">
                 {post.user.username}
               </button>
