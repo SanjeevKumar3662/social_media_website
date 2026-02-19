@@ -1,10 +1,18 @@
 import mongoose from "mongoose";
 
+type ImageType = {
+  url?: string | null;
+  public_id?: string | null;
+};
+
 export interface IUser {
   fullname: string;
   username: string;
   email: string;
   password: string;
+  bio?: string | null;
+  profilePic?: ImageType | null;
+  coverPic?: ImageType | null;
 }
 
 const userSchema = new mongoose.Schema(

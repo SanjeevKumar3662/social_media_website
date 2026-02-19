@@ -6,7 +6,7 @@ import { User } from "../models/user.model.js";
 import { loginSchema, registerSchema } from "../vaidations/user.validation.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { Post } from "../models/post.model.js";
-import cloudinary from "../utils/cloudinary.js";
+import cloudinary, { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { file } from "zod";
 
 export const registerUser: RequestHandler = asyncHandler(async (req, res) => {
@@ -158,9 +158,14 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
   let coverPic;
 
   if (files?.profilePic) {
-    const uploadRes = await cloudinary.uploader.upload(
-      files.profilePic?.[0].path,
-    );
+    //delete old profilePic
+    if (req?.user?.profilePic?.public_id) {
+      await cloudinary.uploader
+        .destroy(req.user.profilePic.public_id)
+        .catch(() => {});
+    }
+
+    const uploadRes = await uploadOnCloudinary(files.profilePic?.[0].path);
 
     if (!uploadRes) {
       return res
@@ -172,14 +177,17 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
       url: uploadRes?.secure_url,
       public_id: uploadRes?.public_id,
     };
-
-    console.log("profilePic", profilePic);
   }
 
   if (files?.coverPic) {
-    const uploadRes = await cloudinary.uploader.upload(
-      files?.coverPic?.[0].path,
-    );
+    //delete old coverPic
+    if (req?.user?.coverPic?.public_id) {
+      await cloudinary.uploader
+        .destroy(req.user.coverPic.public_id)
+        .catch(() => {});
+    }
+
+    const uploadRes = await uploadOnCloudinary(files?.coverPic?.[0].path);
 
     if (!uploadRes) {
       return res.status(500).json({ message: "Failed to upload coverPic" });
@@ -206,8 +214,6 @@ export const updateUserProfile = asyncHandler(async (req, res) => {
   if (!user) {
     return res.status(401).json({ message: "Failed to update the user" });
   }
-
-  console.log(user);
 
   return res.status(200).json(user);
 });

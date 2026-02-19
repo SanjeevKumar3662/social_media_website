@@ -15,16 +15,18 @@ export const uploadOnCloudinary = async (localFilePath: string) => {
       resource_type: "auto",
     });
 
-    // delete temp file after success
-    fs.unlinkSync(localFilePath);
-
     return uploadRes;
   } catch (error) {
-    if (fs.existsSync(localFilePath)) {
-      fs.unlinkSync(localFilePath);
-    }
-
+    console.log("Cloudinary upload failed", error);
     return null;
+  } finally {
+    try {
+      if (fs.existsSync(localFilePath)) {
+        fs.unlinkSync(localFilePath);
+      }
+    } catch (error) {
+      console.log("Cleanup failed", error);
+    }
   }
 };
 
