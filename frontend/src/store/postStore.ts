@@ -4,6 +4,7 @@ import type { PostType } from "../types/post";
 import toast from "react-hot-toast";
 
 type PostStore = {
+  // updateUserProfile: any;
   posts: PostType[];
   cursor: string | null;
 

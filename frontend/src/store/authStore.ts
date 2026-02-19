@@ -3,7 +3,9 @@ import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
 
 import type { AuthState } from "../types/auth";
+import { userPostStore } from "./postStore";
 
+// updateUserProfile: any,
 export const useAuthStore = create<AuthState>((set) => ({
   authUser: null,
 
@@ -51,6 +53,26 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       console.log("error form loginUser : ", error);
       toast.error(`Failed to login user :`);
+    }
+  },
+  updateUserProfile: async (formData: FormData) => {
+    try {
+      const res = await axiosInstance.patch("/user/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      set({ authUser: res.data });
+
+      userPostStore.setState({
+        userProfile: res.data,
+      });
+
+      toast.success("Profile updated successfully");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update profile");
     }
   },
 }));
