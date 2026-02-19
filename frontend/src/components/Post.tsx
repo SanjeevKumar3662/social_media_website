@@ -78,7 +78,7 @@ export const Post = ({ post }: PostProps) => {
         </div>
       </div>
       {/* Content */}
-      <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap">
+      <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap wrap-break-word ">
         {text ? text : `Lorem ipsum dolor sit amet `}
       </p>
 
