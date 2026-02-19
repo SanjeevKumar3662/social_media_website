@@ -21,10 +21,7 @@ function App() {
       {/* <div>hello</div> */}
       <Nav />
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
-        />
+        <Route path="/" element={<HomePage />} />
         <Route
           path="/login"
           element={!authUser ? <Login /> : <Navigate to="/" />}
@@ -33,7 +30,10 @@ function App() {
           path="/register"
           element={!authUser ? <Register /> : <Navigate to="/" />}
         />
-        <Route path="/profile/:username" element={<ProfilePage />} />
+        <Route
+          path="/profile/:username"
+          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
+        />
       </Routes>
     </div>
   );
