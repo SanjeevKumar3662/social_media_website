@@ -17,7 +17,7 @@ function App() {
 
   // console.log("authuser", authUser);
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
       {/* <div>hello</div> */}
       <Nav />
       <Routes>
@@ -30,10 +30,7 @@ function App() {
           path="/register"
           element={!authUser ? <Register /> : <Navigate to="/" />}
         />
-        <Route
-          path="/profile/:username"
-          element={authUser ? <ProfilePage /> : <Navigate to="/login" />}
-        />
+        <Route path="/profile/:username" element={<ProfilePage />} />
       </Routes>
     </div>
   );

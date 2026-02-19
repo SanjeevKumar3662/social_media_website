@@ -3,6 +3,7 @@ import { Image, LoaderPinwheel, Video, X } from "lucide-react";
 
 import { usePostComposer } from "../hooks/usePostComposer";
 import { userPostStore } from "../store/postStore";
+import { useAuthStore } from "../store/authStore";
 
 export const PostModal = () => {
   const {
@@ -18,6 +19,7 @@ export const PostModal = () => {
 
   // const {setP} = userPostStore();
   const { setShowPostModal } = userPostStore();
+  const { authUser } = useAuthStore();
 
   // revent background scroll
   useEffect(() => {
@@ -40,7 +42,9 @@ export const PostModal = () => {
         <div className="w-full max-w-lg sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[85dvh] bg-[#1f3c6d] text-white rounded-2xl p-4 md:p-6 overflow-y-auto shadow-2xl animate-slideUp">
           {/* Header */}
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg md:text-xl font-semibold">Create Post</h2>
+            <h2 className="text-lg md:text-xl font-semibold">
+              {authUser ? "Create Post" : "Login to create a post"}
+            </h2>
             <button
               onClick={() => setShowPostModal(false)}
               className="text-gray-400 hover:text-white transition"

@@ -65,14 +65,15 @@ export const Nav = () => {
               Home
             </a>
 
-            <Link
-              to={`/profile/${authUser?.username}`}
-              onClick={() => setIsOpen(false)}
-              className="px-4 py-2 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition"
-            >
-              Profile
-            </Link>
-
+            {authUser && (
+              <Link
+                to={`/profile/${authUser?.username}`}
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition"
+              >
+                Profile
+              </Link>
+            )}
             <button
               onClick={() => setIsOpen(false)}
               className="text-left px-4 py-2 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition"
@@ -95,12 +96,20 @@ export const Nav = () => {
 
         {/* Bottom Section */}
         <div className="pt-6 border-t border-white/10">
-          <button
-            onClick={handleLogout}
-            className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white"
-          >
-            Logout
-          </button>
+          {authUser ? (
+            <button
+              onClick={handleLogout}
+              className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to={"/login"}>
+              <button className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white">
+                Login
+              </button>
+            </Link>
+          )}
         </div>
       </aside>
     </>

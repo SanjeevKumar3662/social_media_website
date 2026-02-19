@@ -17,7 +17,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.post("/logout", authMiddleware, logoutUser);
 router.get("/me", authMiddleware, authMe);
-router.get("/:username", authMiddleware, getUserProifle);
+router.get("/:username", getUserProifle);
 router.patch(
   "/",
   authMiddleware,

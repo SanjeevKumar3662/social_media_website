@@ -37,7 +37,7 @@ export const RightSideBar = () => {
 
         <div className="bg-white/5 border border-white/10 rounded-xl p-4 text-sm text-gray-300">
           <p className="mb-2">This section is currently under development.</p>
-          <p>Upcoming features will appear here soon.</p>
+          {/* <p>Upcoming features will appear here soon.</p> */}
         </div>
       </div>
     </aside>

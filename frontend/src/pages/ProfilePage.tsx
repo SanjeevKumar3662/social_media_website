@@ -73,7 +73,7 @@ export const ProfilePage = () => {
       <RightSideBar />
 
       {/* Main Content */}
-      <div className="md:ml-64 lg:mr-74 p-6 flex flex-col items-center gap-4">
+      <div className="flex-1 w-full min-w-0 md:ml-64 lg:mr-74 p-6 flex flex-col items-center gap-4 overflow-x-hidden">
         <Toaster position="top-right" />
 
         {showPostModal && <PostModal />}
