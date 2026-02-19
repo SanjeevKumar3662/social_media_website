@@ -22,7 +22,9 @@ export const PostComposer = () => {
   return (
     <div className="max-w-2xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 p-5 flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Create Post</h2>
+        <h2 className="text-lg font-semibold   w-full text-center animate-bounce ">
+          Create Post
+        </h2>
       </div>
 
       {!isSubmitting ? (

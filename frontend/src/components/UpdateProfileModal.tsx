@@ -133,7 +133,7 @@ export const UpdateProfileModal = ({ setShowEditModal }: Props) => {
 
               {/* Upload Buttons */}
               <div className="flex gap-4">
-                <label className="cursor-pointer hover:text-blue-400 transition">
+                <label className="cursor-pointer text-black bg-amber-50 hover:text-blue-400 transition  py-1 px-2 rounded-xl">
                   Profile Pic
                   <input
                     type="file"
@@ -145,7 +145,7 @@ export const UpdateProfileModal = ({ setShowEditModal }: Props) => {
                   />
                 </label>
 
-                <label className="cursor-pointer hover:text-green-400 transition">
+                <label className="cursor-pointer bg-amber-50 text-black hover:text-green-400 transition py-1 px-2 rounded-xl">
                   Cover Pic
                   <input
                     type="file"

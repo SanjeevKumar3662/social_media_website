@@ -31,7 +31,7 @@ export const RightSideBar = () => {
 
       {/* Work in Progress Section */}
       <div>
-        <h2 className="text-white font-semibold text-lg mb-4 tracking-wide">
+        <h2 className="text-white font-semibold text-lg mb-4 tracking-wide animate-bounce">
           Work in Progress
         </h2>
 
