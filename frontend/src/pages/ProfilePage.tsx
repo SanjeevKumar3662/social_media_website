@@ -3,15 +3,21 @@ import { Post } from "../components/Post";
 import { userPostStore } from "../store/postStore";
 import { PostModal } from "../components/PostModal";
 import { Toaster } from "react-hot-toast";
-import { Nav } from "../components/Nav";
+
 import { useParams } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
-// import { User } from "lucide-react";
+import { RightSideBar } from "../components/RightSideBar";
 
 export const ProfilePage = () => {
-  const { userProfile, profilePosts, profileCursor, getUserProfile } =
-    userPostStore();
-  const [showPostModal, setShowPostModal] = useState(false);
+  const {
+    userProfile,
+    profilePosts,
+    profileCursor,
+    getUserProfile,
+    showPostModal,
+  } = userPostStore();
+  // const [showPostModal] = useState(false);
+
   const [isFetching, setIsFetching] = useState(false);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
@@ -56,21 +62,19 @@ export const ProfilePage = () => {
         observer.unobserve(currentLoader);
       }
     };
-  }, [profileCursor, getUserProfile, isFetching, username]);
-
-  const togglePostModal = () => {
-    setShowPostModal((prev) => !prev);
-  };
+  }, [profileCursor, isFetching, username, getUserProfile]);
 
   console.log("userProfile", userProfile);
 
   return (
-    <div className="min-h-screen bg-blue-900">
-      <Nav togglePostModal={togglePostModal} />
+    <div className="min-h-screen flex justify-center flex-row-reverse  border-white bg-blue-900">
+      <RightSideBar />
 
       {/* Main Content */}
-      <div className="md:ml-64 p-6 flex flex-col items-center gap-4">
+      <div className="md:ml-64 lg:mr-74 p-6 flex flex-col items-center gap-4">
         <Toaster position="top-right" />
+
+        {showPostModal && <PostModal />}
 
         <div className="max-w-2xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 overflow-hidden">
           {/* Cover Image */}
@@ -136,8 +140,6 @@ export const ProfilePage = () => {
             </div>
           </div>
         </div>
-
-        {showPostModal && <PostModal onClose={togglePostModal} />}
 
         {/* Posts */}
         {profilePosts.map((post) => (

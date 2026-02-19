@@ -3,14 +3,15 @@ import { Post } from "../components/Post";
 import { userPostStore } from "../store/postStore";
 import { PostModal } from "../components/PostModal";
 import { Toaster } from "react-hot-toast";
-import { Nav } from "../components/Nav";
 import { PostComposer } from "../components/PostComposer";
+
 // import { SearchIcon } from "lucide-react";
 
 export const HomePage = () => {
-  const { posts, cursor, getAllPost } = userPostStore();
-  const [showPostModal, setShowPostModal] = useState(false);
+  const { posts, cursor, getAllPost, showPostModal } = userPostStore();
   const [isFetching, setIsFetching] = useState(false);
+
+  console.log("showPostModal", showPostModal);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 
@@ -45,21 +46,15 @@ export const HomePage = () => {
     };
   }, [cursor, getAllPost, isFetching]);
 
-  const togglePostModal = () => {
-    setShowPostModal((prev) => !prev);
-  };
-
   return (
     <div className="min-h-screen w-full bg-blue-900 overflow-x-hidden">
-      <Nav togglePostModal={togglePostModal} />
-
       {/* Main Content */}
       <div className="md:ml-64 p-6 flex flex-col items-center gap-4">
         <Toaster position="top-right" />
 
         <PostComposer />
 
-        {showPostModal && <PostModal onClose={togglePostModal} />}
+        {showPostModal && <PostModal />}
 
         {/* Posts */}
         {posts.map((post) => (

@@ -18,6 +18,10 @@ type PostStore = {
   profilePosts: PostType[];
   profileCursor: string | null;
 
+  showPostModal: boolean;
+  togglePostModal: () => void;
+  setShowPostModal: (arg0: boolean) => void;
+
   getAllPost: (cursor?: string | null) => Promise<void>;
   getUserProfile: (username: string, cursor?: string | null) => Promise<void>;
   createPost: (formData: FormData) => Promise<void>;
@@ -30,6 +34,11 @@ export const userPostStore = create<PostStore>((set) => ({
   userProfile: null,
   profilePosts: [],
   profileCursor: null,
+  // postStore.ts
+  showPostModal: false,
+  setShowPostModal: (value: boolean) => set({ showPostModal: value }),
+  togglePostModal: () =>
+    set((state) => ({ showPostModal: !state.showPostModal })),
 
   getAllPost: async (cursor) => {
     try {

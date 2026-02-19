@@ -2,12 +2,9 @@ import { useEffect } from "react";
 import { Image, LoaderPinwheel, Video, X } from "lucide-react";
 
 import { usePostComposer } from "../hooks/usePostComposer";
+import { userPostStore } from "../store/postStore";
 
-type PostModalProps = {
-  onClose: () => void;
-};
-
-export const PostModal = ({ onClose }: PostModalProps) => {
+export const PostModal = () => {
   const {
     text,
     image,
@@ -18,6 +15,9 @@ export const PostModal = ({ onClose }: PostModalProps) => {
     handleSubmit,
     isSubmitting,
   } = usePostComposer();
+
+  // const {setP} = userPostStore();
+  const { setShowPostModal } = userPostStore();
 
   // revent background scroll
   useEffect(() => {
@@ -30,7 +30,6 @@ export const PostModal = ({ onClose }: PostModalProps) => {
   const handleForm = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     await handleSubmit();
-    onClose();
   };
 
   return (
@@ -43,7 +42,7 @@ export const PostModal = ({ onClose }: PostModalProps) => {
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg md:text-xl font-semibold">Create Post</h2>
             <button
-              onClick={onClose}
+              onClick={() => setShowPostModal(false)}
               className="text-gray-400 hover:text-white transition"
             >
               <X size={20} />

@@ -2,14 +2,12 @@ import { useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import { Link } from "react-router-dom";
 import { MenuIcon } from "lucide-react";
+import { userPostStore } from "../store/postStore";
 
-type NavProps = {
-  togglePostModal: () => void;
-};
-
-export const Nav = ({ togglePostModal }: NavProps) => {
+export const Nav = () => {
   const { authUser, logoutUser } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const { togglePostModal } = userPostStore();
 
   const handleLogout = async () => {
     await logoutUser();

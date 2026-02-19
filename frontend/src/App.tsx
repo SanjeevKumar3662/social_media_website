@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import { HomePage } from "./pages/HomePage";
 import { Login } from "./pages/auth-froms/Login";
 import { Register } from "./pages/auth-froms/Register";
-// /import { Nav } from "./components/Nav";
+import { Nav } from "./components/Nav";
 import { ProfilePage } from "./pages/ProfilePage";
 
 function App() {
@@ -19,6 +19,7 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* <div>hello</div> */}
+      <Nav />
       <Routes>
         <Route
           path="/"
