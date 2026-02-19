@@ -17,9 +17,11 @@ export const Nav = () => {
     <>
       {/* Mobile Top Bar */}
       <div className="md:hidden flex items-center justify-between bg-[#0f1f3d] px-4 py-3 border-b border-white/10">
-        <span className="text-white font-semibold tracking-wide">
-          DevSocial
-        </span>
+        <Link to={"/"}>
+          <span className="text-white font-semibold tracking-wide">
+            DevSocial
+          </span>
+        </Link>
         <button
           onClick={() => setIsOpen(true)}
           className="text-gray-300 hover:text-white transition"
