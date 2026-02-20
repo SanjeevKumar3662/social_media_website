@@ -3,9 +3,26 @@ import { axiosInstance } from "../lib/axios";
 import type { PostType } from "../types/post";
 import toast from "react-hot-toast";
 
+type CommnetType = {
+  _id: string;
+  postId: string;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+  __v: number;
+  user: {
+    _id: string;
+    username: string;
+    profilePic: {
+      url: string;
+    };
+  };
+};
+
 type PostStore = {
   // updateUserProfile: any;
   posts: PostType[];
+  postComments: CommnetType[];
   cursor: string | null;
 
   userProfile: {
@@ -27,11 +44,14 @@ type PostStore = {
   getUserProfile: (username: string, cursor?: string | null) => Promise<void>;
   createPost: (formData: FormData) => Promise<void>;
   deletePost: (postId: string) => Promise<number | undefined>;
+  getPostComments: (postId: string) => Promise<void>;
+  createComment: (postId: string, comment: string) => Promise<void>;
 };
 
 export const userPostStore = create<PostStore>((set) => ({
   posts: [],
   cursor: null,
+  postComments: [],
 
   userProfile: null,
   profilePosts: [],
@@ -118,6 +138,33 @@ export const userPostStore = create<PostStore>((set) => ({
     } catch (error) {
       console.log("Error in Delete Post :", error);
       toast.error("Failed to delete Post");
+    }
+  },
+  getPostComments: async (postId: string) => {
+    try {
+      const res = await axiosInstance.get(`/comments/${postId}`);
+      console.log("getPostComments", res);
+      // return res.data;
+      set({ postComments: res.data });
+    } catch (error) {
+      toast.error("Failed to getComments");
+      console.log("Error in getPostComments", error);
+    }
+  },
+  createComment: async (postId: string, comment: string) => {
+    try {
+      const res = await axiosInstance.post(`/comments/${postId}`, comment, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+        withCredentials: true,
+      });
+      console.log("createComment", res);
+      toast.success("Comment posted successfully");
+      return res.data;
+    } catch (error) {
+      toast.error("Failed to post a comment");
+      console.log("Error in getPostComments", error);
     }
   },
 }));

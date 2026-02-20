@@ -13,7 +13,7 @@ export const HomePage = () => {
   const { posts, cursor, getAllPost, showPostModal } = userPostStore();
   const [isFetching, setIsFetching] = useState(false);
 
-  console.log("showPostModal", showPostModal);
+  // console.log("showPostModal", showPostModal);
 
   const loaderRef = useRef<HTMLDivElement | null>(null);
 

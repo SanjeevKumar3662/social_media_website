@@ -16,6 +16,7 @@ import { Link } from "react-router";
 import { formatDistanceToNow } from "date-fns";
 import { userPostStore } from "../store/postStore";
 import { useAuthStore } from "../store/authStore";
+import { MessegeModal } from "./MessegeModal";
 
 type PostProps = {
   post: PostType;
@@ -27,6 +28,7 @@ export const Post = ({ post }: PostProps) => {
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isDeleted, setIsDeleted] = useState(false);
+  const [showMessegeModal, setShowMessegeModal] = useState(false);
 
   const { deletePost } = userPostStore();
   const { authUser } = useAuthStore();
@@ -199,7 +201,10 @@ export const Post = ({ post }: PostProps) => {
             <ThumbsDown />
           </button>
 
-          <button className="hover:text-green-400 transition">
+          <button
+            onClick={() => setShowMessegeModal((value) => !value)}
+            className="hover:text-green-400 transition"
+          >
             <MessageCircle />
           </button>
         </div>
@@ -208,6 +213,13 @@ export const Post = ({ post }: PostProps) => {
           <Share />
         </button>
       </div>
+
+      {showMessegeModal && (
+        <MessegeModal
+          postId={post._id}
+          setShowMessegeModal={setShowMessegeModal}
+        />
+      )}
     </div>
   );
 };
