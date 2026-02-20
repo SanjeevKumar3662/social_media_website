@@ -20,7 +20,7 @@ router.post(
   createPost,
 );
 
-router.delete("/", authMiddleware, deletePost);
+router.delete("/:postId", authMiddleware, deletePost);
 
 router.get("/", getAllPosts);
 router.get("/:postId", getPost);
