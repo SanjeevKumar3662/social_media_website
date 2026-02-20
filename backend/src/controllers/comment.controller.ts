@@ -46,12 +46,12 @@ export const getPostComments = asyncHandler(async (req, res) => {
 
   const allComments = await Comment.find({ postId }).populate(
     "userId",
-    "username",
+    "username profilePic",
   );
 
-  return res.status(200).json({
-    ...allComments.map((comment) => {
+  return res.status(200).json([
+    ...allComments.map((comment: any) => {
       return { ...comment.toObject(), user: comment.userId, userId: undefined };
     }),
-  });
+  ]);
 });
