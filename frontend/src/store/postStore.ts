@@ -143,7 +143,7 @@ export const userPostStore = create<PostStore>((set) => ({
   getPostComments: async (postId: string) => {
     try {
       const res = await axiosInstance.get(`/comments/${postId}`);
-      console.log("getPostComments", res);
+      // console.log("getPostComments", res);
       // return res.data;
       set({ postComments: res.data });
     } catch (error) {
@@ -153,18 +153,20 @@ export const userPostStore = create<PostStore>((set) => ({
   },
   createComment: async (postId: string, comment: string) => {
     try {
-      const res = await axiosInstance.post(`/comments/${postId}`, comment, {
-        headers: {
-          "Content-Type": "multipart/form-data",
+      const res = await axiosInstance.post(
+        `/comments/${postId}`,
+        { comment },
+        {
+          withCredentials: true,
         },
-        withCredentials: true,
-      });
-      console.log("createComment", res);
+      );
+      set((state) => ({ postComments: [res.data, ...state.postComments] }));
+      // console.log("createComment", res);
       toast.success("Comment posted successfully");
       return res.data;
     } catch (error) {
       toast.error("Failed to post a comment");
-      console.log("Error in getPostComments", error);
+      console.error("Error in getPostComments", error);
     }
   },
 }));

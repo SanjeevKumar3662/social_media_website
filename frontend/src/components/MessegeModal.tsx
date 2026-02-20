@@ -1,6 +1,8 @@
-import { useEffect, type Dispatch, type SetStateAction } from "react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
 import { userPostStore } from "../store/postStore";
 import { formatDistanceToNow } from "date-fns";
+import toast from "react-hot-toast";
+import { useAuthStore } from "../store/authStore";
 
 type PropType = {
   postId: string;
@@ -8,7 +10,11 @@ type PropType = {
 };
 
 export const MessegeModal = ({ postId, setShowMessegeModal }: PropType) => {
-  const { postComments, getPostComments } = userPostStore();
+  const { postComments, createComment, getPostComments } = userPostStore();
+
+  const [text, setText] = useState("");
+
+  const { authUser } = useAuthStore();
 
   useEffect(() => {
     (async () => {
@@ -16,7 +22,24 @@ export const MessegeModal = ({ postId, setShowMessegeModal }: PropType) => {
     })();
   }, [getPostComments, postId]);
 
-  console.log("postComments", postComments);
+  // console.log("postComments", postComments);
+  const handleFormSubmit = async (
+    e: React.FormEvent<HTMLFormElement>,
+  ): Promise<void> => {
+    e.preventDefault();
+    if (text.trim() === "") {
+      toast.error("Add text to comment");
+      setText("");
+      return;
+    }
+
+    try {
+      await createComment(postId, text);
+      setText("");
+    } catch (error) {
+      console.log("Failed to create a comment ", error);
+    }
+  };
 
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
@@ -33,6 +56,52 @@ export const MessegeModal = ({ postId, setShowMessegeModal }: PropType) => {
               ✕
             </button>
           </div>
+
+          <form className="pb-3" onSubmit={(e) => handleFormSubmit(e)}>
+            <div className="flex flex-row gap-2">
+              <textarea
+                placeholder="What's happening?"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                className="
+      w-full resize-none
+      bg-[#2a4d85]
+      rounded-xl
+      p-3
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-400
+      min-h-24
+    "
+              />
+
+              <div className="flex justify-end">
+                <button
+                  onClick={() => {
+                    if (!authUser) {
+                      toast.error("Login is required to comment");
+                    }
+                  }}
+                  type="submit"
+                  // disabled={!text.trim()}
+                  className="
+        px-5 py-2
+        rounded-lg
+        bg-blue-500
+        hover:bg-blue-600
+        active:scale-95
+        transition
+        font-medium
+        text-sm
+        disabled:opacity-50
+        disabled:cursor-not-allowed
+      "
+                >
+                  Post
+                </button>
+              </div>
+            </div>
+          </form>
 
           {/* Comments */}
           {postComments?.length === 0 ? (
@@ -78,19 +147,9 @@ export const MessegeModal = ({ postId, setShowMessegeModal }: PropType) => {
                       </div>
 
                       {/* Comment */}
-                      <p className="text-sm md:text-base text-white/90 leading-relaxed">
+                      <p className="text-sm md:text-base text-white/90 leading-relaxed text-wrap break-all">
                         {comment.comment}
                       </p>
-
-                      {/* Actions */}
-                      <div className="flex gap-4 mt-2 text-xs text-white/70">
-                        <button className="hover:text-white transition">
-                          Like
-                        </button>
-                        <button className="hover:text-white transition">
-                          Reply
-                        </button>
-                      </div>
                     </div>
                   </div>
                 );

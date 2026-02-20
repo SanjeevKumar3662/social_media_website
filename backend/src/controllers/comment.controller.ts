@@ -24,7 +24,7 @@ export const createComment = asyncHandler(async (req, res) => {
       userId: req.user?._id,
       comment: userComment,
     })
-  ).populate("userId", "username");
+  ).populate("userId", "username profilePic");
 
   return res
     .status(201)
