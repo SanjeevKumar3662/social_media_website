@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Post } from "../components/Post";
 import { userPostStore } from "../store/postStore";
 import { PostModal } from "../components/PostModal";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 import { PostComposer } from "../components/PostComposer";
 import { RightSideBar } from "../components/RightSideBar";
 import { LoaderPinwheel } from "lucide-react";
@@ -54,8 +54,6 @@ export const HomePage = () => {
       <RightSideBar />
 
       <div className="md:ml-64 lg:mr-74 p-6 flex flex-col items-center gap-4">
-        <Toaster />
-
         <PostComposer />
 
         {showPostModal && <PostModal />}

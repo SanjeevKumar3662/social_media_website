@@ -7,6 +7,7 @@ import { Login } from "./pages/auth-froms/Login";
 import { Register } from "./pages/auth-froms/Register";
 import { Nav } from "./components/Nav";
 import { ProfilePage } from "./pages/ProfilePage";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   const { authUser, checkUser } = useAuthStore();
@@ -19,6 +20,8 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col overflow-x-hidden">
       {/* <div>hello</div> */}
+      <Toaster />
+
       <Nav />
       <Routes>
         <Route path="/" element={<HomePage />} />
