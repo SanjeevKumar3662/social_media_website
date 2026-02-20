@@ -2,6 +2,7 @@ import { Image, LoaderPinwheel, Video, X } from "lucide-react";
 
 import { usePostComposer } from "../hooks/usePostComposer";
 import { useAuthStore } from "../store/authStore";
+import toast from "react-hot-toast";
 
 export const PostComposer = () => {
   const { authUser } = useAuthStore();
@@ -119,6 +120,12 @@ export const PostComposer = () => {
             rounded-lg
             font-medium
           "
+              onClick={() => {
+                if (!authUser) {
+                  toast.error("Login first to create a post!");
+                  return;
+                }
+              }}
             >
               Post
             </button>

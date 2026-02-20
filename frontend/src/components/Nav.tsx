@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/authStore";
 import { Link } from "react-router-dom";
 import { MenuIcon } from "lucide-react";
 import { userPostStore } from "../store/postStore";
+import toast from "react-hot-toast";
 
 export const Nav = () => {
   const { authUser, logoutUser } = useAuthStore();
@@ -86,6 +87,10 @@ export const Nav = () => {
             {/* Post Button */}
             <button
               onClick={() => {
+                if (!authUser) {
+                  toast.error("Please Login to create a Post!");
+                  return;
+                }
                 togglePostModal();
                 setIsOpen(false);
               }}
@@ -107,7 +112,10 @@ export const Nav = () => {
             </button>
           ) : (
             <Link to={"/login"}>
-              <button className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white">
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white"
+              >
                 Login
               </button>
             </Link>

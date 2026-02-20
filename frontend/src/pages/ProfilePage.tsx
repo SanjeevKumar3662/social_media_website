@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { RightSideBar } from "../components/RightSideBar";
 import { UpdateProfileModal } from "../components/UpdateProfileModal";
+import { LoaderPinwheel } from "lucide-react";
 
 export const ProfilePage = () => {
   const {
@@ -31,7 +32,12 @@ export const ProfilePage = () => {
     if (!username) {
       return;
     }
-    getUserProfile(username); // initial load
+
+    (async () => {
+      setIsFetching(true);
+      await getUserProfile(username); // initial load
+      setIsFetching(false);
+    })();
   }, [getUserProfile, username]);
 
   useEffect(() => {
@@ -45,9 +51,9 @@ export const ProfilePage = () => {
         }
 
         if (first.isIntersecting && profileCursor && !isFetching) {
-          setIsFetching(true);
+          // setIsFetching(true);
           await getUserProfile(username, profileCursor);
-          setIsFetching(false);
+          // setIsFetching(false);
         }
       },
       { threshold: 1 },
@@ -66,12 +72,20 @@ export const ProfilePage = () => {
     };
   }, [profileCursor, isFetching, username, getUserProfile]);
 
-  console.log("userProfile", userProfile);
+  // console.log("userProfile", userProfile);
+
+  // console.log("isFetching", isFetching);
+  if (isFetching) {
+    return (
+      <div className="min-h-screen flex flex-col justify-center items-center   border-white bg-blue-900">
+        <LoaderPinwheel className="animate-spin w-20 h-20" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex justify-center flex-row-reverse  border-white bg-blue-900">
       <RightSideBar />
-
       {/* Main Content */}
       <div className="flex-1 w-full min-w-0 md:ml-64 lg:mr-74 p-6 flex flex-col items-center gap-4 overflow-x-hidden">
         <Toaster position="top-right" />
@@ -155,7 +169,7 @@ export const ProfilePage = () => {
             ref={loaderRef}
             className="h-10 flex items-center justify-center text-white"
           >
-            {isFetching && <span>Loading...</span>}
+            {<span>End</span>}
           </div>
         )}
       </div>

@@ -17,7 +17,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     } catch (error) {
       set({ authUser: null });
       console.log("error form checkUser : ", error);
-      toast.error(`Failed to check user :`);
+      toast.error(`User not loggedIn`);
     }
   },
 

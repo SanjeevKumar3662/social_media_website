@@ -5,6 +5,7 @@ import { PostModal } from "../components/PostModal";
 import { Toaster } from "react-hot-toast";
 import { PostComposer } from "../components/PostComposer";
 import { RightSideBar } from "../components/RightSideBar";
+import { LoaderPinwheel } from "lucide-react";
 
 // import { SearchIcon } from "lucide-react";
 
@@ -53,7 +54,7 @@ export const HomePage = () => {
       <RightSideBar />
 
       <div className="md:ml-64 lg:mr-74 p-6 flex flex-col items-center gap-4">
-        <Toaster position="top-right" />
+        <Toaster />
 
         <PostComposer />
 
@@ -70,7 +71,9 @@ export const HomePage = () => {
             ref={loaderRef}
             className="h-10 flex items-center justify-center text-white"
           >
-            {isFetching && <span>Loading...</span>}
+            {isFetching && (
+              <LoaderPinwheel className="animate-spin w-15 h-15" />
+            )}
           </div>
         )}
       </div>
