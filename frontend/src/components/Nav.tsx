@@ -23,12 +23,31 @@ export const Nav = () => {
             DevSocial
           </span>
         </Link>
-        <button
-          onClick={() => setIsOpen(true)}
-          className="text-gray-300 hover:text-white transition"
-        >
-          <MenuIcon size={22} />
-        </button>
+        <div className="flex gap-3">
+          {authUser ? (
+            <button
+              onClick={handleLogout}
+              className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white"
+            >
+              Logout
+            </button>
+          ) : (
+            <Link to={"/login"}>
+              <button
+                onClick={() => setIsOpen(false)}
+                className="w-full bg-white/5 hover:bg-white/10 transition px-4 py-2 rounded-lg text-sm text-gray-300 hover:text-white"
+              >
+                Login
+              </button>
+            </Link>
+          )}
+          <button
+            onClick={() => setIsOpen(true)}
+            className="text-gray-300 hover:text-white transition"
+          >
+            <MenuIcon size={22} />
+          </button>
+        </div>
       </div>
 
       {/* Overlay (Mobile Only) */}

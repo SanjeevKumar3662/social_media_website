@@ -80,7 +80,7 @@ export const Post = ({ post }: PostProps) => {
           </div>
           <div className="flex flex-col">
             <Link to={`/profile/${post.user.username}`}>
-              <button className="text-sm font-semibold hover:underline">
+              <button className="text-sm font-semibold hover:underline cursor-pointer">
                 {post.user.username}
               </button>
             </Link>
