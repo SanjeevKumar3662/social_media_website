@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { useAuthStore } from "../../store/authStore";
+import toast from "react-hot-toast";
 
 export const Login = () => {
   const [username, setUsername] = useState("");
@@ -9,8 +10,23 @@ export const Login = () => {
 
   const { loginUser } = useAuthStore();
 
+  const validateForm = () => {
+    if (username.length < 5) {
+      toast.error("Username must be min 5 characters");
+      return true;
+    }
+
+    if (password.length < 8) {
+      toast.error("password must be min 8 characters");
+      return true;
+    }
+  };
+
   const handleOnSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (validateForm()) {
+      return;
+    }
     await loginUser({ username, password });
   };
 
