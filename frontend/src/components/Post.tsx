@@ -23,14 +23,15 @@ type PostProps = {
 };
 
 export const Post = ({ post }: PostProps) => {
-  const { text, votes } = post;
+  const { text } = post;
 
   const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isDeleted, setIsDeleted] = useState(false);
   const [showMessegeModal, setShowMessegeModal] = useState(false);
 
-  const { deletePost } = userPostStore();
+  const { deletePost, toggleLike, toggleDislike } = userPostStore();
+
   const { authUser } = useAuthStore();
 
   const next = () => {
@@ -191,26 +192,59 @@ export const Post = ({ post }: PostProps) => {
       )}
 
       {/* Actions */}
-      <div className="flex items-center justify-between border-t border-white/10 pt-3 text-sm">
-        <div className="flex items-center gap-4">
-          <button className="flex items-center gap-1 hover:text-blue-400 transition">
-            <ThumbsUp />
-          </button>
-          <span>{votes}</span>
-          <button className="flex items-center gap-1 hover:text-red-400 transition">
-            <ThumbsDown />
+      <div className="flex items-center justify-between border-t border-white/10 pt-3">
+        {/* Left Actions */}
+        <div className="flex items-center gap-3">
+          {/* Like */}
+          <button
+            onClick={() => toggleLike(post._id)}
+            className="
+        flex items-center gap-2 px-3 py-1.5 rounded-full
+        bg-white/10 hover:bg-blue-500/20
+        transition-all duration-200
+      "
+          >
+            <ThumbsUp size={16} className="text-blue-400" />
+            <span className="text-sm">{post.likes || 0}</span>
           </button>
 
+          {/* Dislike */}
           <button
-            onClick={() => setShowMessegeModal((value) => !value)}
-            className="hover:text-green-400 transition"
+            onClick={() => toggleDislike(post._id)}
+            className="
+        flex items-center gap-2 px-3 py-1.5 rounded-full
+        bg-white/10 hover:bg-red-500/20
+        transition-all duration-200
+      "
           >
-            <MessageCircle />
+            <ThumbsDown size={16} className="text-red-400" />
+            <span className="text-sm">{post.dislikes || 0}</span>
+          </button>
+
+          {/* Comment */}
+          <button
+            onClick={() => setShowMessegeModal((v) => !v)}
+            className="
+        flex items-center gap-2 px-3 py-1.5 rounded-full
+        bg-white/10 hover:bg-green-500/20
+        transition-all duration-200
+      "
+          >
+            <MessageCircle size={16} />
+            <span className="text-sm">Comment</span>
           </button>
         </div>
 
-        <button className="hover:text-yellow-400 transition">
-          <Share />
+        {/* Share */}
+        <button
+          className="
+      flex items-center gap-2 px-3 py-1.5 rounded-full
+      bg-white/10 hover:bg-yellow-500/20
+      transition-all duration-200
+    "
+        >
+          <Share size={16} />
+          <span className="text-sm">Share</span>
         </button>
       </div>
 

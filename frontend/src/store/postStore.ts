@@ -46,6 +46,9 @@ type PostStore = {
   deletePost: (postId: string) => Promise<number | undefined>;
   getPostComments: (postId: string) => Promise<void>;
   createComment: (postId: string, comment: string) => Promise<void>;
+
+  toggleLike: (postId: string) => Promise<void>;
+  toggleDislike: (postId: string) => Promise<void>;
 };
 
 export const userPostStore = create<PostStore>((set) => ({
@@ -167,6 +170,75 @@ export const userPostStore = create<PostStore>((set) => ({
     } catch (error) {
       toast.error("Failed to post a comment");
       console.error("Error in getPostComments", error);
+    }
+  },
+  toggleLike: async (postId: string) => {
+    try {
+      const res = await axiosInstance.post(
+        `/posts/like/${postId}`,
+        {},
+        { withCredentials: true },
+      );
+
+      const updatedPost = res.data;
+
+      set((state) => ({
+        posts: state.posts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: updatedPost.likes,
+                dislikes: updatedPost.dislikes,
+              }
+            : post,
+        ),
+        profilePosts: state.profilePosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: updatedPost.likes,
+                dislikes: updatedPost.dislikes,
+              }
+            : post,
+        ),
+      }));
+    } catch (error) {
+      console.log("Error in toggleLike:", error);
+    }
+  },
+
+  toggleDislike: async (postId: string) => {
+    try {
+      const res = await axiosInstance.post(
+        `/posts/dislike/${postId}`,
+        {},
+        { withCredentials: true },
+      );
+
+      const updatedPost = res.data;
+
+      set((state) => ({
+        posts: state.posts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: updatedPost.likes,
+                dislikes: updatedPost.dislikes,
+              }
+            : post,
+        ),
+        profilePosts: state.profilePosts.map((post) =>
+          post._id === postId
+            ? {
+                ...post,
+                likes: updatedPost.likes,
+                dislikes: updatedPost.dislikes,
+              }
+            : post,
+        ),
+      }));
+    } catch (error) {
+      console.log("Error in toggleDislike:", error);
     }
   },
 }));

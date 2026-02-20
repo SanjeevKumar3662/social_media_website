@@ -1,4 +1,6 @@
 export interface PostType {
+  likes: number;
+  dislikes: number;
   _id: string;
   text: string;
   image?: {
