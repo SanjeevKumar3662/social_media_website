@@ -4,6 +4,8 @@ import {
   deletePost,
   getAllPosts,
   getPost,
+  toggleDislike,
+  toggleLike,
 } from "../controllers/post.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 import { authMiddleware } from "../middlewares/auth.js";
@@ -24,5 +26,8 @@ router.delete("/:postId", authMiddleware, deletePost);
 
 router.get("/", getAllPosts);
 router.get("/:postId", getPost);
+
+router.post("/like/:postId", authMiddleware, toggleLike);
+router.post("/dislike/:postId", authMiddleware, toggleDislike);
 
 export default router;

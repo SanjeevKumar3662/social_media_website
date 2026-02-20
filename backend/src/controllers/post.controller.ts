@@ -145,7 +145,79 @@ export const getAllPosts = asyncHandler(async (req, res) => {
       ...post.toObject(),
       user: post.userId,
       userId: undefined,
+      likes: post.likes.length,
+      dislikes: post.dislikes.length,
     })),
     cursor: posts.length > 0 ? posts[posts.length - 1].createdAt : null,
+  });
+});
+
+export const toggleLike: RequestHandler = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const postId = req.params.postId;
+
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+
+  const userId = user._id.toString();
+
+  // remove from dislikes if exists
+  post.dislikes = post.dislikes.filter((id) => id.toString() !== userId);
+
+  if (post.likes.includes(user._id)) {
+    // already liked → remove like
+    post.likes = post.likes.filter((id) => id.toString() !== userId);
+  } else {
+    // add like
+    post.likes.push(user._id);
+  }
+
+  await post.save();
+
+  return res.status(200).json({
+    likes: post.likes.length,
+    dislikes: post.dislikes.length,
+  });
+});
+
+export const toggleDislike: RequestHandler = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const postId = req.params.postId;
+
+  if (!user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const post = await Post.findById(postId);
+
+  if (!post) {
+    return res.status(404).json({ message: "Post not found" });
+  }
+
+  const userId = user._id.toString();
+
+  // remove from likes if exists
+  post.likes = post.likes.filter((id) => id.toString() !== userId);
+
+  if (post.dislikes.includes(user._id)) {
+    // already disliked → remove
+    post.dislikes = post.dislikes.filter((id) => id.toString() !== userId);
+  } else {
+    // add dislike
+    post.dislikes.push(user._id);
+  }
+
+  await post.save();
+
+  return res.status(200).json({
+    likes: post.likes.length,
+    dislikes: post.dislikes.length,
   });
 });
