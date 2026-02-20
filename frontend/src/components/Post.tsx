@@ -1,12 +1,21 @@
 import type { PostType } from "../types/post";
 import { useState } from "react";
 
-import { ArrowLeft, MoveRight, Share, ThumbsDown } from "lucide-react";
-import { ThumbsUp } from "lucide-react";
-import { MessageCircle } from "lucide-react";
+import {
+  ArrowLeft,
+  MessageCircle,
+  MoveRight,
+  Share,
+  ThumbsUp,
+  ThumbsDown,
+  X,
+} from "lucide-react";
+
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router";
 import { formatDistanceToNow } from "date-fns";
+import { userPostStore } from "../store/postStore";
+import { useAuthStore } from "../store/authStore";
 
 type PostProps = {
   post: PostType;
@@ -16,8 +25,11 @@ export const Post = ({ post }: PostProps) => {
   const { text, votes } = post;
 
   const [current, setCurrent] = useState(0);
-  // const [current, setCurrent] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  const { deletePost } = userPostStore();
+  const { authUser } = useAuthStore();
 
   const next = () => {
     setDirection(1);
@@ -54,10 +66,13 @@ export const Post = ({ post }: PostProps) => {
     media.push({ type: "video", url: post.video.url });
   }
 
+  if (isDeleted) {
+    return <></>;
+  }
+
   return (
     <div className="max-w-2xl w-full bg-[#1f3c6d] text-white rounded-2xl shadow-xl border border-white/10 p-5 flex flex-col gap-4  ">
       {/* Header */}
-      {/* <div>Index : {}</div> */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-sm font-semibold">
@@ -76,6 +91,18 @@ export const Post = ({ post }: PostProps) => {
             </span>
           </div>
         </div>
+        {authUser?._id === post.user._id && (
+          <button
+            className="cursor-pointer hover:bg-gray-300 hover:text-black rounded-2xl"
+            onClick={async () => {
+              const status = await deletePost(post._id);
+
+              if (status === 200) setIsDeleted(true);
+            }}
+          >
+            <X />
+          </button>
+        )}
       </div>
       {/* Content */}
       <p className="text-sm text-gray-200 leading-relaxed whitespace-pre-wrap wrap-break-word ">

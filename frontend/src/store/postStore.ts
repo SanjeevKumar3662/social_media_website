@@ -26,6 +26,7 @@ type PostStore = {
   getAllPost: (cursor?: string | null) => Promise<void>;
   getUserProfile: (username: string, cursor?: string | null) => Promise<void>;
   createPost: (formData: FormData) => Promise<void>;
+  deletePost: (postId: string) => Promise<number | undefined>;
 };
 
 export const userPostStore = create<PostStore>((set) => ({
@@ -58,13 +59,13 @@ export const userPostStore = create<PostStore>((set) => ({
         cursor: res.data.cursor,
       }));
 
-      console.log("Fetched posts:", res.data);
+      // console.log("Fetched posts:", res.data);
     } catch (error) {
       console.log("Error from fetchPost", error);
     }
   },
   getUserProfile: async (username, cursor) => {
-    console.log("getUserProfile args", username, cursor);
+    // console.log("getUserProfile args", username, cursor);
     try {
       const res = await axiosInstance.get(`/user/${username}`, {
         params: {
@@ -82,7 +83,7 @@ export const userPostStore = create<PostStore>((set) => ({
         userProfile: res.data.user,
       }));
 
-      console.log("Fetched ProfilePosts:", res.data);
+      // console.log("Fetched ProfilePosts:", res.data);
     } catch (error) {
       console.log("Error from getUserPost", error);
     }
@@ -96,7 +97,7 @@ export const userPostStore = create<PostStore>((set) => ({
         },
         withCredentials: true,
       });
-      console.log("post created", res.data);
+      // console.log("post created", res.data);
 
       // Optional: prepend new post to feed
       set((state) => ({
@@ -106,6 +107,17 @@ export const userPostStore = create<PostStore>((set) => ({
       toast.success("Post Created Successfully");
     } catch (error) {
       console.log("Error in createPost : ", error);
+    }
+  },
+  deletePost: async (postId: string) => {
+    try {
+      const res = await axiosInstance.delete(`/posts/${postId}`);
+
+      toast.success("Post deleted");
+      return res.status;
+    } catch (error) {
+      console.log("Error in Delete Post :", error);
+      toast.error("Failed to delete Post");
     }
   },
 }));
